@@ -29,6 +29,54 @@
       background: var(--bg);
     }
 
+    /* ── LOGO GLOBAL ────────────────────────────────────────── */
+    .logo-global {
+      position: fixed;
+      top: 44px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+    }
+
+    .logo-letter {
+      height: clamp(32px, 4vw, 52px);
+      width: auto;
+      display: block;
+      opacity: 0;
+    }
+
+    /* delays: caída + encendido por letra */
+    .logo-letter:nth-child(1) { --dd: 0.00s; --cd: 1.10s; }
+    .logo-letter:nth-child(2) { --dd: 0.08s; --cd: 1.18s; }
+    .logo-letter:nth-child(3) { --dd: 0.16s; --cd: 1.26s; }
+    .logo-letter:nth-child(4) { --dd: 0.24s; --cd: 1.34s; }
+    .logo-letter:nth-child(5) { --dd: 0.32s; --cd: 1.42s; }
+    .logo-letter:nth-child(6) { --dd: 0.40s; --cd: 1.50s; }
+
+    @keyframes drop-soft {
+      0%   { opacity: 0;    transform: translateY(-55px); }
+      100% { opacity: 0.22; transform: translateY(0);     }
+    }
+
+    @keyframes complete-letter {
+      0%   { opacity: 0.22; filter: brightness(1);    }
+      35%  { opacity: 1;    filter: brightness(0.08); }
+      100% { opacity: 1;    filter: brightness(1);    }
+    }
+
+    .logo-wrap.animate .logo-letter {
+      animation:
+        drop-soft       0.65s cubic-bezier(0.22, 1, 0.36, 1) var(--dd) forwards,
+        complete-letter 0.60s ease-in-out                    var(--cd) forwards;
+    }
+
     /* ── CONTAINER ─────────────────────────────────────────── */
     .strips {
       display: flex;
@@ -72,20 +120,9 @@
 
     .strip:hover .strip__bg { transform: scale(0.97); }
 
-    /* TODO: replace with url('assets/img/uy.jpg') center/cover no-repeat */
-    .strip--uy .strip__bg {
-      background: linear-gradient(160deg, #0b1f35 0%, #1a3a52 50%, #0a1520 100%);
-    }
-
-    /* TODO: replace with url('assets/img/ar.jpg') center/cover no-repeat */
-    .strip--ar .strip__bg {
-      background: linear-gradient(160deg, #12101a 0%, #2a1e42 50%, #0d0c14 100%);
-    }
-
-    /* TODO: replace with url('assets/img/br.jpg') center/cover no-repeat */
-    .strip--br .strip__bg {
-      background: linear-gradient(160deg, #1a1208 0%, #3a260e 50%, #140e06 100%);
-    }
+    .strip--uy .strip__bg { background: url('assets/img/bg/uy.jpg') center/cover no-repeat; }
+    .strip--ar .strip__bg { background: url('assets/img/bg/ar.jpg') center/cover no-repeat; }
+    .strip--br .strip__bg { background: url('assets/img/bg/br.jpg') center/cover no-repeat; }
 
     /* ── OVERLAY ───────────────────────────────────────────── */
     .strip__overlay {
@@ -115,7 +152,6 @@
     .strip:hover .strip__curtain { transform: translateY(68%); }
 
     /* ── BORDER LINES ──────────────────────────────────────── */
-    /* Línea inferior 3px */
     .strip__border-b {
       position: absolute;
       bottom: 0;
@@ -131,7 +167,6 @@
 
     .strip:hover .strip__border-b { transform: scaleX(1); }
 
-    /* Línea vertical lateral */
     .strip__border-s {
       position: absolute;
       top: 0;
@@ -145,7 +180,6 @@
       z-index: 4;
     }
 
-    /* Brasil: línea al lado izquierdo */
     .strip--br .strip__border-s { right: auto; left: 0; }
 
     .strip:hover .strip__border-s { transform: scaleY(1); }
@@ -162,43 +196,13 @@
       padding: 2rem;
     }
 
-    /*
-     * Logo placeholder — cuando llegue el SVG del cliente:
-     * 1. Reemplazar <span class="strip__wordmark"> por:
-     *    <img src="assets/img/logo.svg" class="strip__logo-img" alt="Verzet">
-     * 2. Descomentar el bloque .strip__logo-img de abajo
-     */
-
-    /*
-    .strip__logo-img {
-      width: clamp(80px, 10vw, 130px);
-      height: auto;
-      filter: brightness(0) invert(1);
-      transition: filter var(--dur) var(--ease);
-    }
-    .strip:hover .strip__logo-img {
-      filter: brightness(0) invert(1) sepia(1) saturate(8) hue-rotate(-10deg);
-    }
-    */
-
-    .strip__wordmark {
-      font-family: var(--font-display);
-      font-weight: 800;
-      font-size: clamp(1.8rem, 3.2vw, 3.4rem);
-      color: var(--text);
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      line-height: 1;
-    }
-
     .strip__domain {
       font-family: var(--font-body);
       font-weight: 300;
-      font-size: clamp(0.6rem, 1vw, 0.85rem);
+      font-size: clamp(0.7rem, 1.1vw, 1rem);
       color: rgba(255, 255, 255, 0.55);
       letter-spacing: 0.3em;
       text-transform: uppercase;
-      margin-top: 0.65rem;
       transition: color var(--dur) var(--ease), letter-spacing var(--dur) var(--ease);
     }
 
@@ -227,6 +231,8 @@
 
     /* ── MOBILE PORTRAIT ───────────────────────────────────── */
     @media (max-width: 768px) and (orientation: portrait) {
+      .logo-global { top: 28px; }
+
       .strips { flex-direction: column; }
 
       .strip {
@@ -236,7 +242,6 @@
 
       .strip:last-child { border-bottom: none; }
 
-      /* Cortina desde la izquierda en portrait */
       .strip__curtain {
         bottom: auto;
         left: 0;
@@ -247,7 +252,6 @@
 
       .strip:hover .strip__curtain { transform: translateX(-68%); }
 
-      /* Línea derecha vertical */
       .strip__border-b {
         bottom: auto;
         top: 0;
@@ -261,7 +265,6 @@
 
       .strip:hover .strip__border-b { transform: scaleY(1); }
 
-      /* Línea inferior horizontal */
       .strip__border-s {
         top: auto;
         right: auto;
@@ -277,17 +280,28 @@
 
       .strip:hover .strip__border-s { transform: scaleX(1); }
 
-      .strip__wordmark { font-size: clamp(2.2rem, 9vw, 4rem); }
-      .strip__domain   { font-size: clamp(0.7rem, 3vw, 1.1rem); }
+      .strip__domain { font-size: clamp(0.8rem, 3.5vw, 1.2rem); }
     }
 
-    /* Landscape phones — ocultar CTA para que entre todo */
     @media (max-height: 480px) {
       .strip__cta { display: none; }
     }
   </style>
 </head>
 <body>
+
+  <!-- Logo único centrado, flota sobre las tres franjas -->
+  <div class="logo-global">
+    <div class="logo-wrap" id="logo-wrap">
+      <img src="assets/img/logo/letters/letter-v.svg"  class="logo-letter" alt="V">
+      <img src="assets/img/logo/letters/letter-e.svg"  class="logo-letter" alt="E">
+      <img src="assets/img/logo/letters/letter-r.svg"  class="logo-letter" alt="R">
+      <img src="assets/img/logo/letters/letter-z.svg"  class="logo-letter" alt="Z">
+      <img src="assets/img/logo/letters/letter-e2.svg" class="logo-letter" alt="E">
+      <img src="assets/img/logo/letters/letter-t.svg"  class="logo-letter" alt="T">
+    </div>
+  </div>
+
   <main class="strips">
 
     <!-- Uruguay -->
@@ -298,8 +312,6 @@
       <div class="strip__border-b"></div>
       <div class="strip__border-s"></div>
       <div class="strip__content">
-        <!-- TODO: <img src="assets/img/logo.svg" class="strip__logo-img" alt="Verzet"> -->
-        <span class="strip__wordmark">Verzet</span>
         <span class="strip__domain">.uy</span>
         <span class="strip__cta">Ingresar</span>
       </div>
@@ -313,8 +325,6 @@
       <div class="strip__border-b"></div>
       <div class="strip__border-s"></div>
       <div class="strip__content">
-        <!-- TODO: <img src="assets/img/logo.svg" class="strip__logo-img" alt="Verzet"> -->
-        <span class="strip__wordmark">Verzet</span>
         <span class="strip__domain">.ar</span>
         <span class="strip__cta">Ingresar</span>
       </div>
@@ -328,13 +338,20 @@
       <div class="strip__border-b"></div>
       <div class="strip__border-s"></div>
       <div class="strip__content">
-        <!-- TODO: <img src="assets/img/logo.svg" class="strip__logo-img" alt="Verzet"> -->
-        <span class="strip__wordmark">Verzet</span>
         <span class="strip__domain">.br</span>
         <span class="strip__cta">Acessar</span>
       </div>
     </a>
 
   </main>
+
+  <script>
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('logo-wrap').classList.add('animate');
+      }, 300);
+    });
+  </script>
+
 </body>
 </html>
