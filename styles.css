@@ -286,7 +286,7 @@ html, body {
   position: fixed;
   inset: 0;
   background:
-    linear-gradient(to top, rgba(255, 107, 53, 0.28) 0%, rgba(255, 107, 53, 0.12) 60%, transparent 100%),
+    linear-gradient(to top, rgba(255, 107, 53, 0.28) 0%, transparent 60%),
     #0d0d0d;
   z-index: 100;
   display: flex;
@@ -345,15 +345,21 @@ html, body {
   letter-spacing: 0.35em;
   text-transform: uppercase;
   margin-top: 3rem;
-  background: var(--accent);
-  color: #0d0d0d;
-  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   cursor: pointer;
   padding: 0.7em 2em 0.7em calc(2em + 0.35em);
-  transition: opacity 0.2s ease;
+  outline: 1px solid transparent;
+  outline-offset: -6px;
+  transition: color 0.25s ease, outline-color 0.3s var(--ease), outline-offset 0.3s var(--ease);
 }
 
-.coming-back:hover { opacity: 0.85; }
+.coming-back:hover {
+  color: #fff;
+  outline-color: var(--accent);
+  outline-offset: 4px;
+}
 
 .coming-border-b {
   position: absolute;
