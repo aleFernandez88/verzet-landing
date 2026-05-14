@@ -12,9 +12,7 @@
 
     :root {
       --accent:       #ff6b35;
-      --accent-hover: #e85520;
       --bg:           #0d0d0d;
-      --text:         #ffffff;
       --border:       #333333;
       --font-display: 'Barlow Condensed', sans-serif;
       --font-body:    'Barlow', sans-serif;
@@ -29,10 +27,10 @@
       background: var(--bg);
     }
 
-    /* ── LOGO GLOBAL ────────────────────────────────────────── */
+    /* ── LOGO ───────────────────────────────────────────────── */
     .logo-global {
       position: fixed;
-      top: 44px;
+      top: clamp(60px, 20vh, 160px);
       left: 50%;
       transform: translateX(-50%);
       z-index: 10;
@@ -52,7 +50,6 @@
       opacity: 0;
     }
 
-    /* delays: caída + encendido por letra */
     .logo-letter:nth-child(1) { --dd: 0.00s; --cd: 1.10s; }
     .logo-letter:nth-child(2) { --dd: 0.08s; --cd: 1.18s; }
     .logo-letter:nth-child(3) { --dd: 0.16s; --cd: 1.26s; }
@@ -77,18 +74,16 @@
         complete-letter 0.60s ease-in-out                    var(--cd) forwards;
     }
 
-    /* ── CONTAINER ─────────────────────────────────────────── */
+    /* ── STRIPS ─────────────────────────────────────────────── */
     .strips {
       display: flex;
       width: 100vw;
       height: 100vh;
     }
 
-    /* ── STRIP ─────────────────────────────────────────────── */
     .strip {
       position: relative;
       flex: 1;
-      overflow: hidden;
       text-decoration: none;
       border-right: 1px solid var(--border);
       transition: flex var(--dur) var(--ease);
@@ -96,7 +91,6 @@
 
     .strip:last-child { border-right: none; }
 
-    /* Hover expansion */
     .strips:has(.strip--uy:hover) .strip--uy,
     .strips:has(.strip--ar:hover) .strip--ar,
     .strips:has(.strip--br:hover) .strip--br { flex: 1.9; }
@@ -116,6 +110,7 @@
       background-position: center;
       transition: transform var(--dur) var(--ease);
       will-change: transform;
+      z-index: 0;
     }
 
     .strip:hover .strip__bg { transform: scale(0.97); }
@@ -124,34 +119,26 @@
     .strip--ar .strip__bg { background: url('assets/img/bg/ar.jpg') center/cover no-repeat; }
     .strip--br .strip__bg { background: url('assets/img/bg/br.jpg') center/cover no-repeat; }
 
-    /* ── OVERLAY ───────────────────────────────────────────── */
+    /* ── OVERLAY ────────────────────────────────────────────── */
     .strip__overlay {
       position: absolute;
       inset: 0;
-      background: rgba(0, 0, 0, 0.58);
+      background: rgba(0, 0, 0, 0.62);
       transition: background var(--dur) var(--ease);
       z-index: 1;
     }
 
-    .strip:hover .strip__overlay { background: rgba(0, 0, 0, 0.3); }
+    .strip:hover .strip__overlay { background: rgba(0, 0, 0, 0.82); }
 
-    /* ── CURTAIN (sube desde abajo) ────────────────────────── */
-    .strip__curtain {
+    /* ── INNER ──────────────────────────────────────────────── */
+    .strip__inner {
       position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 100%;
-      background: var(--accent);
-      transform: translateY(100%);
-      transition: transform var(--dur) var(--ease);
+      inset: 0;
+      overflow: hidden;
       z-index: 2;
-      pointer-events: none;
     }
 
-    .strip:hover .strip__curtain { transform: translateY(68%); }
-
-    /* ── BORDER LINES ──────────────────────────────────────── */
+    /* ── BORDER LINES ───────────────────────────────────────── */
     .strip__border-b {
       position: absolute;
       bottom: 0;
@@ -162,7 +149,7 @@
       transform: scaleX(0);
       transform-origin: left center;
       transition: transform var(--dur) var(--ease);
-      z-index: 4;
+      z-index: 3;
     }
 
     .strip:hover .strip__border-b { transform: scaleX(1); }
@@ -177,14 +164,14 @@
       transform: scaleY(0);
       transform-origin: top center;
       transition: transform var(--dur) var(--ease);
-      z-index: 4;
+      z-index: 3;
     }
 
     .strip--br .strip__border-s { right: auto; left: 0; }
 
     .strip:hover .strip__border-s { transform: scaleY(1); }
 
-    /* ── CONTENT ───────────────────────────────────────────── */
+    /* ── CONTENT ────────────────────────────────────────────── */
     .strip__content {
       position: absolute;
       inset: 0;
@@ -192,33 +179,54 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      z-index: 3;
+      z-index: 2;
       padding: 2rem;
     }
 
-    .strip__domain {
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: clamp(0.7rem, 1.1vw, 1rem);
-      color: rgba(255, 255, 255, 0.55);
-      letter-spacing: 0.3em;
+    .strip__tld {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 62px;
+      color: rgba(255, 255, 255, 0.72);
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      transition: color var(--dur) var(--ease), letter-spacing var(--dur) var(--ease);
+      line-height: 1;
+      transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
     }
 
-    .strip:hover .strip__domain {
+    .strip:hover .strip__tld {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+
+    .strip__domain-full {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(1.1rem, 2.8vw, 3.4rem);
       color: var(--accent);
-      letter-spacing: 0.55em;
+      letter-spacing: 0.06em;
+      text-transform: lowercase;
+      line-height: 1;
+      position: absolute;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+      white-space: nowrap;
+    }
+
+    .strip:hover .strip__domain-full {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .strip__cta {
       font-family: var(--font-body);
       font-weight: 400;
       font-size: clamp(0.5rem, 0.85vw, 0.72rem);
-      color: rgba(255, 255, 255, 0.85);
+      color: rgba(255, 255, 255, 0.7);
       letter-spacing: 0.45em;
       text-transform: uppercase;
-      margin-top: 2.2rem;
+      margin-top: 2.8rem;
       opacity: 0;
       transform: translateY(10px);
       transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
@@ -229,9 +237,9 @@
       transform: translateY(0);
     }
 
-    /* ── MOBILE PORTRAIT ───────────────────────────────────── */
+    /* ── MOBILE PORTRAIT ────────────────────────────────────── */
     @media (max-width: 768px) and (orientation: portrait) {
-      .logo-global { top: 28px; }
+      .logo-global { top: clamp(40px, 12vh, 80px); }
 
       .strips { flex-direction: column; }
 
@@ -241,16 +249,6 @@
       }
 
       .strip:last-child { border-bottom: none; }
-
-      .strip__curtain {
-        bottom: auto;
-        left: 0;
-        top: 0;
-        height: 100%;
-        transform: translateX(-100%);
-      }
-
-      .strip:hover .strip__curtain { transform: translateX(-68%); }
 
       .strip__border-b {
         bottom: auto;
@@ -280,7 +278,8 @@
 
       .strip:hover .strip__border-s { transform: scaleX(1); }
 
-      .strip__domain { font-size: clamp(0.8rem, 3.5vw, 1.2rem); }
+      .strip__tld         { font-size: clamp(2.2rem, 10vw, 4rem); }
+      .strip__domain-full { font-size: clamp(0.9rem, 4vw, 1.6rem); }
     }
 
     @media (max-height: 480px) {
@@ -290,7 +289,6 @@
 </head>
 <body>
 
-  <!-- Logo único centrado, flota sobre las tres franjas -->
   <div class="logo-global">
     <div class="logo-wrap" id="logo-wrap">
       <img src="assets/img/logo/letters/letter-v.svg"  class="logo-letter" alt="V">
@@ -308,12 +306,14 @@
     <a href="https://verzet.uy" class="strip strip--uy" aria-label="Verzet Uruguay">
       <div class="strip__bg"></div>
       <div class="strip__overlay"></div>
-      <div class="strip__curtain"></div>
-      <div class="strip__border-b"></div>
-      <div class="strip__border-s"></div>
-      <div class="strip__content">
-        <span class="strip__domain">.uy</span>
-        <span class="strip__cta">Ingresar</span>
+      <div class="strip__inner">
+        <div class="strip__border-b"></div>
+        <div class="strip__border-s"></div>
+        <div class="strip__content">
+          <span class="strip__tld">.uy</span>
+          <span class="strip__domain-full">verzet.com.uy</span>
+          <span class="strip__cta">Ingresar</span>
+        </div>
       </div>
     </a>
 
@@ -321,12 +321,14 @@
     <a href="https://verzet.com.ar" class="strip strip--ar" aria-label="Verzet Argentina">
       <div class="strip__bg"></div>
       <div class="strip__overlay"></div>
-      <div class="strip__curtain"></div>
-      <div class="strip__border-b"></div>
-      <div class="strip__border-s"></div>
-      <div class="strip__content">
-        <span class="strip__domain">.ar</span>
-        <span class="strip__cta">Ingresar</span>
+      <div class="strip__inner">
+        <div class="strip__border-b"></div>
+        <div class="strip__border-s"></div>
+        <div class="strip__content">
+          <span class="strip__tld">.ar</span>
+          <span class="strip__domain-full">verzet.com.ar</span>
+          <span class="strip__cta">Ingresar</span>
+        </div>
       </div>
     </a>
 
@@ -334,12 +336,14 @@
     <a href="https://verzet.com.br" class="strip strip--br" aria-label="Verzet Brasil">
       <div class="strip__bg"></div>
       <div class="strip__overlay"></div>
-      <div class="strip__curtain"></div>
-      <div class="strip__border-b"></div>
-      <div class="strip__border-s"></div>
-      <div class="strip__content">
-        <span class="strip__domain">.br</span>
-        <span class="strip__cta">Acessar</span>
+      <div class="strip__inner">
+        <div class="strip__border-b"></div>
+        <div class="strip__border-s"></div>
+        <div class="strip__content">
+          <span class="strip__tld">.br</span>
+          <span class="strip__domain-full">verzet.com.br</span>
+          <span class="strip__cta">Acessar</span>
+        </div>
       </div>
     </a>
 
