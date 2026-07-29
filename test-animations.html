@@ -11,16 +11,26 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --accent:       #ff6b35;
-      --bg:           #0d0d0d;
+      --accent:       #FFE000;
+      --accent-hover: #E6CA00;
+      --accent-dark:  #CCB300;
+      --accent-soft:  #F0DC8C;
+      --on-accent:    #111111;
+      --bg-base:      #0d0d0d;
+      --bg-surface:   #1a1a1a;
+      --bg-surface-2: #242424;
+      --bg-surface-3: #2e2e2e;
       --text:         #ffffff;
+      --text-muted:   #999999;
+      --text-faint:   #666666;
       --border:       #333333;
+      --border-light: #444444;
       --font-display: 'Barlow Condensed', sans-serif;
       --font-body:    'Barlow', sans-serif;
     }
 
     body {
-      background: var(--bg);
+      background: var(--bg-base);
       color: var(--text);
       font-family: var(--font-body);
       min-height: 100vh;
