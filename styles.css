@@ -206,7 +206,20 @@ html, body {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   line-height: 1;
+  position: relative;
+  padding-bottom: 0.5em;
   transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+
+.strip__tld::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2.4em;
+  height: 3px;
+  background: var(--accent);
 }
 
 .strip:hover .strip__tld {
