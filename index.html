@@ -7,6 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="assets/img/bg/uy.webp">
+  <link rel="preload" as="image" href="assets/img/bg/ar.webp">
+  <link rel="preload" as="image" href="assets/img/bg/br.webp">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -85,6 +88,14 @@
       setTimeout(() => {
         document.getElementById('logo-wrap').classList.add('animate');
       }, 300);
+    });
+
+    // Fade in each strip's background once its image has actually loaded
+    document.querySelectorAll('.strip__bg').forEach(bg => {
+      const url = getComputedStyle(bg).backgroundImage.slice(5, -2); // strip url("...")
+      const img = new Image();
+      img.onload = () => bg.classList.add('loaded');
+      img.src = url;
     });
 
     // Coming soon overlay

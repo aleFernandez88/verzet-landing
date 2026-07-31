@@ -115,18 +115,22 @@ html, body {
 .strip__bg {
   position: absolute;
   inset: 0;
+  background-color: var(--bg-surface);
   background-size: cover;
   background-position: center;
-  transition: transform var(--dur) var(--ease);
+  opacity: 0;
+  transition: transform var(--dur) var(--ease), opacity 0.6s ease;
   will-change: transform;
   z-index: 0;
 }
 
+.strip__bg.loaded { opacity: 1; }
+
 .strip:hover .strip__bg { transform: scale(0.97); }
 
-.strip--uy .strip__bg { background: url('assets/img/bg/uy.jpg') center/cover no-repeat; }
-.strip--ar .strip__bg { background: url('assets/img/bg/ar.jpg') center/cover no-repeat; }
-.strip--br .strip__bg { background: url('assets/img/bg/br.jpg') center/cover no-repeat; }
+.strip--uy .strip__bg { background-image: url('assets/img/bg/uy.webp'); }
+.strip--ar .strip__bg { background-image: url('assets/img/bg/ar.webp'); }
+.strip--br .strip__bg { background-image: url('assets/img/bg/br.webp'); }
 
 /* ── OVERLAY ────────────────────────────────────────────── */
 .strip__overlay {
