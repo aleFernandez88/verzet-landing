@@ -28,14 +28,14 @@
   <main class="strips">
 
     <!-- Uruguay -->
-    <a href="https://verzet.uy" class="strip strip--uy" aria-label="Verzet Uruguay">
+    <a href="https://verzet.com.uy" class="strip strip--uy" aria-label="Verzet Uruguay">
       <div class="strip__bg"></div>
       <div class="strip__overlay"></div>
       <div class="strip__inner">
         <div class="strip__border-b"></div>
         <div class="strip__border-s"></div>
         <div class="strip__content">
-          <span class="strip__tld">.uy</span>
+          <span class="strip__tld">Uruguay</span>
           <span class="strip__domain-full">verzet.com.uy</span>
           <span class="strip__cta">Ingresar</span>
         </div>
@@ -50,7 +50,7 @@
         <div class="strip__border-b"></div>
         <div class="strip__border-s"></div>
         <div class="strip__content">
-          <span class="strip__tld">.ar</span>
+          <span class="strip__tld">Argentina</span>
           <span class="strip__domain-full">verzet.com.ar</span>
           <span class="strip__cta">Ingresar</span>
         </div>
@@ -65,7 +65,7 @@
         <div class="strip__border-b"></div>
         <div class="strip__border-s"></div>
         <div class="strip__content">
-          <span class="strip__tld">.br</span>
+          <span class="strip__tld">Brasil</span>
           <span class="strip__domain-full">verzet.com.br</span>
           <span class="strip__cta">Acessar</span>
         </div>
@@ -84,19 +84,38 @@
   </div>
 
   <script>
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        document.getElementById('logo-wrap').classList.add('animate');
-      }, 300);
-    });
+    // Intro: sincroniza el logo y las 3 franjas en un único reveal, en vez de que
+    // cada imagen aparezca por separado según la velocidad de conexión de cada visitante.
+    const INTRO_SEEN_KEY = 'verzetIntroSeen';
+    const MIN_INTRO_MS = 700;   // piso: asegura que la animación se vea siempre, aunque las imágenes ya estén en caché
+    const MAX_WAIT_MS  = 4000;  // techo: nunca deja al visitante esperando una imagen rota/lentísima
 
-    // Fade in each strip's background once its image has actually loaded
-    document.querySelectorAll('.strip__bg').forEach(bg => {
-      const url = getComputedStyle(bg).backgroundImage.slice(5, -2); // strip url("...")
-      const img = new Image();
-      img.onload = () => bg.classList.add('loaded');
-      img.src = url;
-    });
+    const logoWrap = document.getElementById('logo-wrap');
+    const bgEls = Array.from(document.querySelectorAll('.strip__bg'));
+
+    function reveal(withIntro) {
+      bgEls.forEach(bg => bg.classList.add('loaded'));
+      logoWrap.classList.add(withIntro ? 'animate' : 'skip-intro');
+    }
+
+    if (sessionStorage.getItem(INTRO_SEEN_KEY)) {
+      reveal(false);
+    } else {
+      const imagesReady = Promise.all(bgEls.map(bg => new Promise(resolve => {
+        const url = getComputedStyle(bg).backgroundImage.slice(5, -2); // strip url("...")
+        const img = new Image();
+        img.onload = resolve;
+        img.onerror = resolve;
+        img.src = url;
+      })));
+      const minDelay = new Promise(resolve => setTimeout(resolve, MIN_INTRO_MS));
+      const maxWait  = new Promise(resolve => setTimeout(resolve, MAX_WAIT_MS));
+
+      Promise.race([Promise.all([imagesReady, minDelay]), maxWait]).then(() => {
+        sessionStorage.setItem(INTRO_SEEN_KEY, '1');
+        reveal(true);
+      });
+    }
 
     // Coming soon overlay
     const overlay      = document.getElementById('coming-overlay');
@@ -104,15 +123,13 @@
     const comingDomain = document.getElementById('coming-domain');
 
     const comingSoon = {
-      uy: { label: 'Próximamente', domain: 'verzet.com.uy' },
-      br: { label: 'Em breve',     domain: 'verzet.com.br' }
+      br: { label: 'Em breve', domain: 'verzet.com.br' }
     };
 
-    document.querySelectorAll('.strip--uy, .strip--br').forEach(strip => {
+    document.querySelectorAll('.strip--br').forEach(strip => {
       strip.addEventListener('click', e => {
         e.preventDefault();
-        const country = strip.classList.contains('strip--uy') ? 'uy' : 'br';
-        const d = comingSoon[country];
+        const d = comingSoon.br;
         comingLabel.textContent  = d.label;
         comingDomain.textContent = d.domain;
         overlay.classList.add('active');

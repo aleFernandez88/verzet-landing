@@ -83,6 +83,8 @@ html, body {
     complete-letter 0.60s ease-in-out                    var(--cd) forwards;
 }
 
+.logo-wrap.skip-intro .logo-letter { opacity: 1; }
+
 /* ── STRIPS ─────────────────────────────────────────────── */
 .strips {
   display: flex;
