@@ -274,7 +274,19 @@ html, body {
 
 /* ── MOBILE PORTRAIT ────────────────────────────────────── */
 @media (max-width: 768px) and (orientation: portrait) {
-  .logo-global { top: clamp(40px, 12vh, 80px); }
+  .logo-global {
+    top: clamp(40px, 12vh, 80px);
+    transition: top 0.6s var(--ease), left 0.6s var(--ease), transform 0.6s var(--ease);
+  }
+
+  /* Achicado y anclado en la esquina tras la intro: en mobile los strips se apilan
+     y el logo centrado tapa el nombre de la primera franja (Uruguay). */
+  .logo-global.settled {
+    top: 14px;
+    left: 14px;
+    transform: scale(0.42);
+    transform-origin: top left;
+  }
 
   .strips { flex-direction: column; }
 
@@ -313,6 +325,9 @@ html, body {
 
   .strip__tld         { font-size: clamp(2.2rem, 10vw, 4rem); }
   .strip__domain-full { font-size: clamp(0.9rem, 4vw, 1.6rem); }
+
+  /* Baja el bloque de nombre+línea un poco del centro exacto de la franja */
+  .strip__content { transform: translateY(20%); }
 }
 
 @media (max-height: 480px) {

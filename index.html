@@ -93,12 +93,17 @@
     const MIN_INTRO_MS = 700;   // piso: asegura que la animación se vea siempre, aunque las imágenes ya estén en caché
     const MAX_WAIT_MS  = 4000;  // techo: nunca deja al visitante esperando una imagen rota/lentísima
 
-    const logoWrap = document.getElementById('logo-wrap');
+    const logoWrap   = document.getElementById('logo-wrap');
+    const logoGlobal = document.querySelector('.logo-global');
     const bgEls = Array.from(document.querySelectorAll('.strip__bg'));
 
     function reveal(withIntro) {
       bgEls.forEach(bg => bg.classList.add('loaded'));
       logoWrap.classList.add(withIntro ? 'animate' : 'skip-intro');
+      // En mobile los strips se apilan y el logo centrado queda sobre el nombre
+      // de la primera franja: una vez que se vio completo, se achica a la esquina.
+      const settleDelay = withIntro ? 2200 : 500;
+      setTimeout(() => logoGlobal.classList.add('settled'), settleDelay);
     }
 
     if (sessionStorage.getItem(INTRO_SEEN_KEY)) {
