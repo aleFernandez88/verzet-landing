@@ -19,12 +19,28 @@
   <meta name="twitter:description" content="Verzet — Equipate para la aventura. Uruguay · Argentina · Brasil.">
   <meta name="twitter:image" content="assets/img/og-image.jpg">
 
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Verzet",
+    "url": "https://alefernandez88.github.io/verzet-landing/",
+    "logo": "https://alefernandez88.github.io/verzet-landing/assets/img/og-image.jpg",
+    "sameAs": [
+      "https://verzet.com.uy",
+      "https://verzet.com.ar"
+    ]
+  }
+  </script>
+
   <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
   <link rel="icon" href="assets/img/favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@300;400;500&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="preload" as="image" href="assets/img/bg/uy.webp">
   <link rel="preload" as="image" href="assets/img/bg/ar.webp">
   <link rel="preload" as="image" href="assets/img/bg/br.webp">
@@ -34,12 +50,12 @@
 
   <div class="logo-global">
     <div class="logo-wrap" id="logo-wrap">
-      <img src="assets/img/logo/letters/letter-v.svg"  class="logo-letter" alt="V">
-      <img src="assets/img/logo/letters/letter-e.svg"  class="logo-letter" alt="E">
-      <img src="assets/img/logo/letters/letter-r.svg"  class="logo-letter" alt="R">
-      <img src="assets/img/logo/letters/letter-z.svg"  class="logo-letter" alt="Z">
-      <img src="assets/img/logo/letters/letter-e2.svg" class="logo-letter" alt="E">
-      <img src="assets/img/logo/letters/letter-t.svg"  class="logo-letter" alt="T">
+      <img src="assets/img/logo/letters/letter-v.svg"  class="logo-letter" alt="V" width="190" height="212">
+      <img src="assets/img/logo/letters/letter-e.svg"  class="logo-letter" alt="E" width="186" height="212">
+      <img src="assets/img/logo/letters/letter-r.svg"  class="logo-letter" alt="R" width="208" height="213">
+      <img src="assets/img/logo/letters/letter-z.svg"  class="logo-letter" alt="Z" width="201" height="212">
+      <img src="assets/img/logo/letters/letter-e2.svg" class="logo-letter" alt="E" width="185" height="212">
+      <img src="assets/img/logo/letters/letter-t.svg"  class="logo-letter" alt="T" width="184" height="212">
     </div>
   </div>
 
@@ -92,7 +108,7 @@
 
   </main>
 
-  <div class="coming-overlay" id="coming-overlay">
+  <div class="coming-overlay" id="coming-overlay" role="dialog" aria-modal="true" aria-label="Próximamente">
     <div class="coming-content">
       <p class="coming-domain" id="coming-domain"></p>
       <p class="coming-label" id="coming-label"></p>
@@ -149,21 +165,34 @@
       br: { label: 'Em breve', domain: 'verzet.com.br' }
     };
 
+    const closeBtn = document.getElementById('coming-close');
+    let lastTrigger = null;
+
     document.querySelectorAll('.strip--br').forEach(strip => {
       strip.addEventListener('click', e => {
         e.preventDefault();
+        lastTrigger = strip;
         const d = comingSoon.br;
         comingLabel.textContent  = d.label;
         comingDomain.textContent = d.domain;
         overlay.classList.add('active');
+        closeBtn.focus();
       });
     });
 
-    function closeOverlay() { overlay.classList.remove('active'); }
+    function closeOverlay() {
+      overlay.classList.remove('active');
+      if (lastTrigger) { lastTrigger.focus(); lastTrigger = null; }
+    }
 
-    document.getElementById('coming-close').addEventListener('click', closeOverlay);
+    closeBtn.addEventListener('click', closeOverlay);
     overlay.addEventListener('click', e => { if (e.target === overlay) closeOverlay(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeOverlay(); });
+    document.addEventListener('keydown', e => {
+      if (!overlay.classList.contains('active')) return;
+      if (e.key === 'Escape') closeOverlay();
+      // Único elemento enfocable dentro del modal: mantiene el foco atrapado ahí.
+      if (e.key === 'Tab') { e.preventDefault(); closeBtn.focus(); }
+    });
   </script>
 
 </body>
