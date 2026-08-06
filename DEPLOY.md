@@ -39,10 +39,11 @@ Sitio 100% estático (HTML/CSS/JS vanilla, sin build, sin dependencias). El depl
 2. Con auto-deploy, Hostinger despliega el revert solo; si es manual, repetir "Pull latest" en hPanel.
 3. Si el problema parece ser solo de caché (CDN/browser) y el código está bien, probar primero un hard refresh antes de asumir que hace falta revertir.
 
-## Pendiente para cuando arranque la migración
+## Pendiente
 
-- Confirmar plan Business activo y dominio `verzet.com` apuntando a Hostinger.
-- Conectar el repo vía Git en hPanel (setup inicial de arriba).
-- Actualizar `canonical` / `og:url` / `sitemap.xml` / `robots.txt` / `sameAs` del JSON-LD una vez el dominio esté en vivo.
-- Decidir si se da de baja GitHub Pages o se deja como espejo/staging.
+- ~~Confirmar plan Business activo y dominio `verzet.com` apuntando a Hostinger.~~ ✅ hecho.
+- ~~Conectar el repo vía Git en hPanel (setup inicial de arriba).~~ ✅ hecho — auto-deploy activo, cada push a `master` despliega en Hostinger.
+- ~~Actualizar `canonical` / `og:url` / `sitemap.xml` / `robots.txt` / `sameAs` del JSON-LD una vez el dominio esté en vivo.~~ ✅ hecho.
+- Decidir si se da de baja GitHub Pages o se deja como espejo/staging (sigue sirviendo el mismo `index.html`, ahora con `canonical` apuntando a `verzet.com`, así que no genera problema de contenido duplicado mientras tanto).
+- Enviar `sitemap.xml` a Google Search Console (propiedad `verzet.com`) para acelerar indexación — no se hizo todavía.
 - Cuando Brasil vuelva al sitio (ver contexto en el historial de commits, franja pospuesta el 2026-08-04), este flujo de deploy no cambia — solo cambia el contenido que se pushea.

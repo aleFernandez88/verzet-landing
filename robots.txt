@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://alefernandez88.github.io/verzet-landing/sitemap.xml
+Sitemap: https://verzet.com/sitemap.xml
