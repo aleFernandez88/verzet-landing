@@ -130,6 +130,40 @@
         reveal(true);
       });
     }
+
+    // Mobile: tap-to-expand. En touch no hay :hover real, así que el primer
+    // toque expande la franja a pantalla completa (revela dominio + CTA) y
+    // el segundo toque recién navega. Tocar la franja angosta cambia el país.
+    const mobileMQ = window.matchMedia('(max-width: 768px) and (orientation: portrait)');
+    const strips = Array.from(document.querySelectorAll('.strip'));
+
+    function setStripStates(activeStrip) {
+      strips.forEach(s => {
+        s.classList.toggle('is-expanded', s === activeStrip);
+        s.classList.toggle('is-collapsed', s !== activeStrip);
+        s.setAttribute('aria-expanded', String(s === activeStrip));
+      });
+    }
+
+    function resetStripStates() {
+      strips.forEach(s => {
+        s.classList.remove('is-expanded', 'is-collapsed');
+        s.removeAttribute('aria-expanded');
+      });
+    }
+
+    strips.forEach(strip => {
+      strip.addEventListener('click', (e) => {
+        if (!mobileMQ.matches) return;
+        if (strip.classList.contains('is-expanded')) return; // ya expandida: navega
+        e.preventDefault();
+        setStripStates(strip);
+      });
+    });
+
+    mobileMQ.addEventListener('change', (e) => {
+      if (!e.matches) resetStripStates();
+    });
   </script>
 
 </body>

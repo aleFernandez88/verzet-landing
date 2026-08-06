@@ -334,7 +334,65 @@ html, body {
   .strip__domain-full { font-size: clamp(0.9rem, 4vw, 1.6rem); }
 
   /* Baja el bloque de nombre+línea un poco del centro exacto de la franja */
-  .strip__content { transform: translateY(20%); }
+  .strip__content { transform: translateY(20%); transition: transform var(--dur) var(--ease); }
+
+  /* ── TAP-TO-EXPAND (mobile) ──────────────────────────────
+     En touch no existe hover real, y el crecimiento por :hover recortaba
+     el fondo al cambiar el alto de la franja. Acá el estado lo maneja el
+     JS (clases is-expanded/is-collapsed vía tap), así que se anula todo
+     el comportamiento por :hover/:focus-visible heredado de desktop. */
+  .strips:has(.strip:hover) .strip,
+  .strips:has(.strip:focus-visible) .strip { flex: 1; }
+
+  .strip:hover .strip__bg,
+  .strip:focus-visible .strip__bg { transform: none; }
+
+  .strip:hover .strip__overlay,
+  .strip:focus-visible .strip__overlay { background: rgba(0, 0, 0, 0.62); }
+
+  .strip:hover .strip__border-b,
+  .strip:focus-visible .strip__border-b,
+  .strip:hover .strip__border-s,
+  .strip:focus-visible .strip__border-s { transform: none; }
+
+  .strip:hover .strip__tld,
+  .strip:focus-visible .strip__tld { opacity: 1; transform: none; }
+
+  .strip:hover .strip__domain-full,
+  .strip:focus-visible .strip__domain-full { opacity: 0; transform: translateY(8px); }
+
+  .strip:hover .strip__cta,
+  .strip:focus-visible .strip__cta { opacity: 0; transform: translateY(10px); }
+
+  /* Primer tap: expande a casi pantalla completa y revela dominio+CTA.
+     La franja colapsada queda como tira angosta, pero sigue tocable. */
+  .strip.is-expanded  { flex: 6; }
+  .strip.is-collapsed { flex: 1; }
+
+  .strip.is-expanded .strip__bg { transform: scale(0.97); }
+
+  .strip.is-expanded .strip__overlay { background: rgba(0, 0, 0, 0.86); }
+
+  .strip.is-expanded .strip__border-b { transform: scaleY(1); }
+  .strip.is-expanded .strip__border-s { transform: scaleX(1); }
+
+  .strip.is-expanded .strip__tld { opacity: 0; transform: translateY(-6px); }
+  .strip.is-expanded .strip__domain-full { opacity: 1; transform: translateY(0); }
+  .strip.is-expanded .strip__cta { opacity: 1; transform: translateY(0); }
+
+  .strip.is-expanded .strip__content,
+  .strip.is-collapsed .strip__content { transform: none; }
+
+  /* Tira colapsada: solo el nombre del país, achicado para entrar en el espacio */
+  .strip.is-collapsed .strip__tld {
+    font-size: clamp(1rem, 5vw, 1.3rem);
+    padding-bottom: 0.3em;
+  }
+
+  .strip.is-collapsed .strip__tld::after {
+    width: 1.6em;
+    height: 2px;
+  }
 }
 
 @media (max-height: 480px) {
