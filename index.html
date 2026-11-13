@@ -46,7 +46,7 @@
   <link rel="preload" as="image" href="assets/img/bg/uy.webp">
   <link rel="preload" as="image" href="assets/img/bg/ar.webp">
   <link rel="preload" as="image" href="assets/img/bg/br.webp">
-  <link rel="stylesheet" href="styles.css?v=20261015">
+  <link rel="stylesheet" href="styles.css?v=20261113">
 </head>
 <body>
 
@@ -110,15 +110,6 @@
 
   </main>
 
-  <div class="coming-overlay" id="coming-overlay" role="dialog" aria-modal="true" aria-label="Próximamente">
-    <div class="coming-content">
-      <p class="coming-domain" id="coming-domain"></p>
-      <p class="coming-label" id="coming-label"></p>
-      <button class="coming-back" id="coming-close">← Volver</button>
-    </div>
-    <div class="coming-border-b"></div>
-  </div>
-
   <script>
     // Intro: sincroniza el logo y las 3 franjas en un único reveal, en vez de que
     // cada imagen aparezca por separado según la velocidad de conexión de cada visitante.
@@ -179,49 +170,14 @@
       });
     }
 
-    // Coming soon overlay (Brasil)
-    const overlay      = document.getElementById('coming-overlay');
-    const comingLabel  = document.getElementById('coming-label');
-    const comingDomain = document.getElementById('coming-domain');
-    const closeBtn     = document.getElementById('coming-close');
-    const comingSoon   = { br: { label: 'Em breve', domain: 'verzet.com.br' } };
-    let lastTrigger = null;
-
-    function openComing(strip) {
-      lastTrigger = strip;
-      comingLabel.textContent  = comingSoon.br.label;
-      comingDomain.textContent = comingSoon.br.domain;
-      overlay.classList.add('active');
-      closeBtn.focus();
-    }
-
-    function closeOverlay() {
-      overlay.classList.remove('active');
-      if (lastTrigger) { lastTrigger.focus(); lastTrigger = null; }
-    }
-
     strips.forEach(strip => {
       strip.addEventListener('click', (e) => {
         if (mobileMQ.matches && !strip.classList.contains('is-expanded')) {
           e.preventDefault();
           setStripStates(strip);
-          return;
         }
-        // Ya expandida (mobile) o desktop: Brasil abre el overlay, el resto navega
-        if (strip.classList.contains('strip--br')) {
-          e.preventDefault();
-          openComing(strip);
-        }
+        // Ya expandida (mobile) o desktop: el link navega normalmente
       });
-    });
-
-    closeBtn.addEventListener('click', closeOverlay);
-    overlay.addEventListener('click', e => { if (e.target === overlay) closeOverlay(); });
-    document.addEventListener('keydown', e => {
-      if (!overlay.classList.contains('active')) return;
-      if (e.key === 'Escape') closeOverlay();
-      // Único elemento enfocable dentro del modal: mantiene el foco atrapado ahí.
-      if (e.key === 'Tab') { e.preventDefault(); closeBtn.focus(); }
     });
 
     mobileMQ.addEventListener('change', (e) => {
